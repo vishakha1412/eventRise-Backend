@@ -37,6 +37,13 @@ email: {
     enum: ["organiser", "customer"],
     required: true,
   },
+   otp:{
+        type: Number,
+    },
+    otpExpiry:{
+        type:Date,
+    }
+    
 
 
  

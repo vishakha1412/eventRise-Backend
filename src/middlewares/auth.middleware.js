@@ -3,13 +3,13 @@ import userModel from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 
 async function authEventOrganiserMiddleware(req, res, next) {
-    const token=req.cookies.token;
+    const token=req.cookies.token; // when user logged in then only token will be there in cookies otherwise not. 
 
     if (!token) {
         return res.status(401).json({ message: "Please login first" });
     }
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET); // to get id from token to work furter
         const eventOrganiser = await EventOrganiser.findById(decoded.id);
         req.eventOrganiser = eventOrganiser;
         next();

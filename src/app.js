@@ -4,21 +4,22 @@ import cookieParser from 'cookie-parser';
 import authroutes from './routes/auth.routes.js'
 import eventroutes from'./routes/event.routes.js'
 import organiserroutes from './routes/eventOrganiser.js'
+import feedbackroutes from './routes/Feedback.routes.js'
  
- 
+// comments are for understanding what the use of code of line  
  
  
 
 const app=express();
-app.use(cors(
+app.use(cors( // to prevent cors error 
     {
         origin:"http://localhost:5173",
         credentials:true,
     }
 ));
-app.use(cookieParser());
+app.use(cookieParser());  // to parse cookies from incoming requests
 
-app.use(express.json());
+app.use(express.json()); // to parse json data from incoming requests
 
 app.get('/',(req,res)=>{
     res.send("Welcome to EventRise Backend");
@@ -27,7 +28,7 @@ app.get('/',(req,res)=>{
 app.use('/api/auth',authroutes);
 app.use('/api/event',eventroutes)
 app.use('/api/organiser',organiserroutes)
-
+app.use('/api/feedback', feedbackroutes); // Dynamic import for Feedback routes
 
 
 

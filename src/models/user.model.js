@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+ 
 
 const userSchema = new mongoose.Schema({
     fullName: {
@@ -9,7 +10,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-    },
+        lowercase:true,
+        trim:true,
+
+        },
     password: {
         type: String,
     },
@@ -18,7 +22,26 @@ const userSchema = new mongoose.Schema({
         enum: ["organiser", "customer"],
 
         required:true,
+    },
+    googleId:{
+        type: String,
+        unique: true
+    },
+    isVerified:{
+        type:Boolean,
+        default:false
+    },
+    isLoggedIn:{
+        type:Boolean,
+        default:false
+    },
+    otp:{
+        type: Number,
+    },
+    otpExpiry:{
+        type:Date,
     }
+    
 },
     {
         timestamps: true

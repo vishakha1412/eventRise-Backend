@@ -49,6 +49,25 @@ async function getEvent(req,res){
         events
     })
 }
+async function deleteEvent(req,res){
+    const{id}=req.params;
+     try {
+    const deletedEvent = await Event.findByIdAndDelete(id);
+
+    if (!deletedEvent) {
+      return res.status(404).json({ message: 'Event not found' });
+    }
+
+    res.status(200).json({
+      message: 'Event deleted successfully',
+      event: deletedEvent,
+    });
+  } catch (error) {
+    console.error('Delete error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+
+}
 async function likeevent(req,res){
     const{eventId}=req.body;
     const user=req.user;
@@ -137,5 +156,5 @@ async function getSaveEvent(req,res){
 }
 
 export{
-    createEvent,getEvent,likeevent,saveEvent,getSaveEvent
+    createEvent,getEvent,likeevent,saveEvent,getSaveEvent,deleteEvent
 }
