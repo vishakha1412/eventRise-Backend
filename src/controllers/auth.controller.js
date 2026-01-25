@@ -200,7 +200,7 @@ async function loginOrganiser(req,res){
     });
 
     res.status(200).json({
-        message: "Food partner logged in successfully",
+        message: "organiser partner logged in successfully",
         role:organiser.role,
         token,
         organiser: {
