@@ -13,7 +13,8 @@ import feedbackroutes from './routes/Feedback.routes.js'
 const app=express();
 app.use(cors( // to prevent cors error 
     {
-        origin:"https://eventrise-vjea.onrender.com",
+        origin:"https://eventrise.onrender.com
+",
         credentials:true,
     }
 ));
