@@ -34,10 +34,11 @@ async function registerUser(req, res) {
         id: user._id,
     }, process.env.JWT_SECRET, { expiresIn: '2d' });
       res.cookie("token", token,{
-         httpOnly: true,
-  secure: true,
-  sameSite: "none",
-  maxAge: 7 * 24 * 60 * 60 * 1000,})
+        httpOnly: true,
+        secure: process.env.NODE_ENVIRONMENT === 'production',
+        sameSite: 'None',
+        maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
+      })
       console.log("Sending verification email to:", email);
      
      await sendVerificationEmail({ email, token }).catch((err) => {
@@ -82,11 +83,13 @@ async function loginUser(req, res) {
         id: user._id,role:user.role
     }, process.env.JWT_SECRET)
 
-    res.cookie("token", token,
-               {  httpOnly: true,
-  secure: true,
-  sameSite: "none",
-  maxAge: 7 * 24 * 60 * 60 * 1000,})
+   res.cookie("token", token,{
+        httpOnly: true,
+        secure: process.env.NODE_ENVIRONMENT === 'production',
+        sameSite: 'None',
+        maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
+      })
+
      await sendVerificationEmail({ email, token }).catch((err) => {
         console.log("Error sending email:", err);
     });
@@ -163,11 +166,12 @@ async function registerOrganiser(req,res){
         id:eventorganiser._id, 
 
     },process.env.JWT_SECRET,{expiresIn: "2d"})
-    res.cookie("token",token,{
-       httpOnly: true,
-  secure: true,
-  sameSite: "none",
-  maxAge: 7 * 24 * 60 * 60 * 1000,})
+  res.cookie("token", token,{
+        httpOnly: true,
+        secure: process.env.NODE_ENVIRONMENT === 'production',
+        sameSite: 'None',
+        maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
+      })
      await sendVerificationEmail({ email, token }).catch((err) => {
         console.log("Error sending email:", err);
     });
@@ -205,21 +209,13 @@ async function loginOrganiser(req,res){
      const token = jwt.sign({
         id: organiser._id,role:organiser.role
     }, process.env.JWT_SECRET)
-
-    res.cookie("token", token,{
-<<<<<<< HEAD
-       // httpOnly: true,
- // secure: process.env.NODE_ENVIRONMENT === "production",
-  //sameSite: process.env.NODE_ENVIRONMENT === "production" ? "None" : "Lax",
-  maxAge: 2 * 24 * 60 * 60 * 1000,
-=======
+res.cookie("token", token,{
         httpOnly: true,
-         secure: true, // required for HTTPS
-         sameSite: "None", // required for cross-origin cookies
-         maxAge: 2 * 24 * 60 * 60 * 1000,
->>>>>>> 8b8a28a2e3b3aa11240f818e6524d7ef4071a3eb
+        secure: process.env.NODE_ENVIRONMENT === 'production',
+        sameSite: 'None',
+        maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
+      })
 
-    })
      await sendVerificationEmail({ email, token }).catch((err) => {
         console.log("Error sending email:", err);
     });
@@ -328,7 +324,6 @@ function logoutOrganiser(req,res){
         messsage:"Organiser logged out succesfully"
     });
 }
-<<<<<<< HEAD
 function authMe(req,res){
   try {
     const token = req.cookies?.token;
@@ -349,7 +344,6 @@ function authMe(req,res){
     return res.status(401).json({ authenticated: false });
   }
 }
+ 
 export {resetPasswordOrganiser, requestPasswordOrganiserReset, registerUser, loginUser, logoutUser,loginOrganiser,logoutOrganiser,registerOrganiser,updateUserProfile,requestPasswordReset ,resetPassword,authMe};
-=======
-export {resetPasswordOrganiser, requestPasswordOrganiserReset, registerUser, loginUser, logoutUser,loginOrganiser,logoutOrganiser,registerOrganiser,updateUserProfile,requestPasswordReset ,resetPassword};
->>>>>>> 8b8a28a2e3b3aa11240f818e6524d7ef4071a3eb
+ 
