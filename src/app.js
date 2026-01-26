@@ -17,6 +17,7 @@ app.use(cors( // to prevent cors error
         credentials:true,
     }
 ));
+ 
 app.use(cookieParser());  // to parse cookies from incoming requests
 
 app.use(express.json()); // to parse json data from incoming requests
