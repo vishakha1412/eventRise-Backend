@@ -207,17 +207,12 @@ async function loginOrganiser(req,res){
     }, process.env.JWT_SECRET)
 
     res.cookie("token", token,{
-<<<<<<< HEAD
-       // httpOnly: true,
- // secure: process.env.NODE_ENVIRONMENT === "production",
-  //sameSite: process.env.NODE_ENVIRONMENT === "production" ? "None" : "Lax",
-  maxAge: 2 * 24 * 60 * 60 * 1000,
-=======
+ 
         httpOnly: true,
          secure: true, // required for HTTPS
          sameSite: "None", // required for cross-origin cookies
          maxAge: 2 * 24 * 60 * 60 * 1000,
->>>>>>> 8b8a28a2e3b3aa11240f818e6524d7ef4071a3eb
+ 
 
     })
      await sendVerificationEmail({ email, token }).catch((err) => {
@@ -328,7 +323,7 @@ function logoutOrganiser(req,res){
         messsage:"Organiser logged out succesfully"
     });
 }
-<<<<<<< HEAD
+ 
 function authMe(req,res){
   try {
     const token = req.cookies?.token;
@@ -350,6 +345,4 @@ function authMe(req,res){
   }
 }
 export {resetPasswordOrganiser, requestPasswordOrganiserReset, registerUser, loginUser, logoutUser,loginOrganiser,logoutOrganiser,registerOrganiser,updateUserProfile,requestPasswordReset ,resetPassword,authMe};
-=======
-export {resetPasswordOrganiser, requestPasswordOrganiserReset, registerUser, loginUser, logoutUser,loginOrganiser,logoutOrganiser,registerOrganiser,updateUserProfile,requestPasswordReset ,resetPassword};
->>>>>>> 8b8a28a2e3b3aa11240f818e6524d7ef4071a3eb
+ 
