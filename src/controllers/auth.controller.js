@@ -195,9 +195,11 @@ async function loginOrganiser(req,res){
     }, process.env.JWT_SECRET)
 
     res.cookie("token", token,{
-        httpOnly: true,
-        secure: true,
-        sameSite: "None",
+       // httpOnly: true,
+ // secure: process.env.NODE_ENVIRONMENT === "production",
+  //sameSite: process.env.NODE_ENVIRONMENT === "production" ? "None" : "Lax",
+  maxAge: 2 * 24 * 60 * 60 * 1000,
+
     })
      await sendVerificationEmail({ email, token }).catch((err) => {
         console.log("Error sending email:", err);
@@ -307,4 +309,24 @@ function logoutOrganiser(req,res){
         messsage:"Organiser logged out succesfully"
     });
 }
-export {resetPasswordOrganiser, requestPasswordOrganiserReset, registerUser, loginUser, logoutUser,loginOrganiser,logoutOrganiser,registerOrganiser,updateUserProfile,requestPasswordReset ,resetPassword};
+function authMe(req,res){
+  try {
+    const token = req.cookies?.token;
+
+    if (!token) {
+      return res.status(401).json({ authenticated: false });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    return res.json({
+      authenticated: true,
+      role: decoded.role,
+      userId: decoded.id,
+    });
+  } catch (error) {
+    console.error("authMe error:", error.message);
+    return res.status(401).json({ authenticated: false });
+  }
+}
+export {resetPasswordOrganiser, requestPasswordOrganiserReset, registerUser, loginUser, logoutUser,loginOrganiser,logoutOrganiser,registerOrganiser,updateUserProfile,requestPasswordReset ,resetPassword,authMe};

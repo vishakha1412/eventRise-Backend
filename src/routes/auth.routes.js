@@ -1,5 +1,5 @@
 import express from 'express'
-import  {registerUser,loginUser, logoutUser,registerOrganiser,loginOrganiser,logoutOrganiser,updateUserProfile,requestPasswordReset,resetPassword, requestPasswordOrganiserReset, resetPasswordOrganiser,}  from '../controllers/auth.controller.js';
+import  {registerUser,loginUser, logoutUser,registerOrganiser,loginOrganiser,logoutOrganiser,updateUserProfile,requestPasswordReset,resetPassword, requestPasswordOrganiserReset, resetPasswordOrganiser, authMe,}  from '../controllers/auth.controller.js';
 
  
 const router=express.Router();
@@ -10,7 +10,7 @@ router.get('/user/logout',  logoutUser)
 router.post("/user/request-password-reset", requestPasswordReset);
 router.post("/user/reset-password", resetPassword);
 
- 
+router.get("/login/me",authMe);
 
 
 
