@@ -35,9 +35,9 @@ async function registerUser(req, res) {
     }, process.env.JWT_SECRET, { expiresIn: '2d' });
       res.cookie("token", token,{
          httpOnly: true,
-  secure: true,
-  sameSite: "none",
-  maxAge: 7 * 24 * 60 * 60 * 1000,})
+        secure: process.env.NODE_ENVIRONMENT === 'production',
+        sameSite: 'Strict',
+        maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days})
       console.log("Sending verification email to:", email);
      
      await sendVerificationEmail({ email, token }).catch((err) => {
@@ -84,9 +84,9 @@ async function loginUser(req, res) {
 
     res.cookie("token", token,
                {  httpOnly: true,
-  secure: true,
-  sameSite: "none",
-  maxAge: 7 * 24 * 60 * 60 * 1000,})
+        secure: process.env.NODE_ENVIRONMENT === 'production',
+        sameSite: 'Strict',
+        maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days})
      await sendVerificationEmail({ email, token }).catch((err) => {
         console.log("Error sending email:", err);
     });
@@ -165,9 +165,9 @@ async function registerOrganiser(req,res){
     },process.env.JWT_SECRET,{expiresIn: "2d"})
     res.cookie("token",token,{
        httpOnly: true,
-  secure: true,
-  sameSite: "none",
-  maxAge: 7 * 24 * 60 * 60 * 1000,})
+        secure: process.env.NODE_ENVIRONMENT === 'production',
+        sameSite: 'Strict',
+        maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days})
      await sendVerificationEmail({ email, token }).catch((err) => {
         console.log("Error sending email:", err);
     });
@@ -208,10 +208,10 @@ async function loginOrganiser(req,res){
 
     res.cookie("token", token,{
  
-        httpOnly: true,
-         secure: true, // required for HTTPS
-         sameSite: "None", // required for cross-origin cookies
-         maxAge: 2 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+        secure: process.env.NODE_ENVIRONMENT === 'production',
+        sameSite: 'Strict',
+        maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
  
 
     })
