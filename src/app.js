@@ -13,7 +13,7 @@ import feedbackroutes from './routes/Feedback.routes.js'
 const app=express();
 app.use(cors( // to prevent cors error 
     {
-        origin:"http://localhost:5173",
+        origin:"https://eventrise-six.vercel.app/",
         credentials:true,
     }
 ));
