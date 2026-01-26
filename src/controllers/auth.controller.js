@@ -194,7 +194,11 @@ async function loginOrganiser(req,res){
         id: organiser._id,role:organiser.role
     }, process.env.JWT_SECRET)
 
-    res.cookie("token", token)
+    res.cookie("token", token,{
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+    })
      await sendVerificationEmail({ email, token }).catch((err) => {
         console.log("Error sending email:", err);
     });
