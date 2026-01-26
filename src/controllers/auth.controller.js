@@ -196,8 +196,10 @@ async function loginOrganiser(req,res){
 
     res.cookie("token", token,{
         httpOnly: true,
-        secure: true,
-        sameSite: "None",
+         secure: true, // required for HTTPS
+         sameSite: "None", // required for cross-origin cookies
+         maxAge: 2 * 24 * 60 * 60 * 1000,
+
     })
      await sendVerificationEmail({ email, token }).catch((err) => {
         console.log("Error sending email:", err);
