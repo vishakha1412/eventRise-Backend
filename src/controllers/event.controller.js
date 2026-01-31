@@ -79,6 +79,7 @@ async function likeevent(req,res){
         await Like.deleteOne({
             user: user._id,
             event: eventId
+            
         })
          await Event.findByIdAndUpdate(eventId, {
             $inc: { likeCount: -1 }
@@ -91,7 +92,8 @@ async function likeevent(req,res){
 
     const like = await Like.create({
         user: user._id,
-        event: eventId
+        event: eventId,
+        isLike: true,
     })
 
     await Event.findByIdAndUpdate(eventId, {
@@ -126,9 +128,11 @@ async function saveEvent(req,res){
         })
     }
 
-    const save = await save.create({
+    const newSave = await save.create({
         user: user._id,
-        event: eventId
+        event: eventId,
+        isSave: true,
+        
     })
 
     await Event.findByIdAndUpdate(eventId, {
@@ -136,25 +140,65 @@ async function saveEvent(req,res){
     })
      res.status(201).json({
         message: "Event saved successfully",
-        save
+        save :newSave
     })
 
 }
+ 
 
 async function getSaveEvent(req,res){
-    const user=req.user;
-     const savedEvents = await save.find({ user: user._id }).populate('event');
+ const user = req.user;
 
-    if (!savedEvents || savedEvents.length === 0) {
-        return res.status(404).json({ message: "No saved event found" });
-    }
-
-    res.status(200).json({
-        message: "Saved event retrieved successfully",
-        savedEvents
+  const saved = await save.find({ user: user._id })
+    .populate({
+      path: 'event',
+      populate: {
+        path: 'eventOrganiser',
+        select: '_id name'
+      }
     });
-}
 
+  // Filter out entries with null event
+  const savedEvents = saved
+    .map(s => s.event)
+    .filter(e => e !== null);
+
+  if (savedEvents.length === 0) {
+    return res.status(404).json({ message: "No saved event found" });
+  }
+
+  res.status(200).json({
+    message: "Saved events retrieved successfully",
+    savedEvents
+  });
+
+
+}
+async function getLikedEvent(req,res){
+      const { eventId } = req.params; // or req.body
+  const user = req.user;
+
+  const like = await Like.findOne({ user: user._id, event: eventId });
+
+  if (like) {
+    return res.status(200).json({ liked: true });
+  } else {
+    return res.status(200).json({ liked: false });
+  }
+
+     
+}
+async function savedEvent(req,res){
+    const { eventId } = req.params;
+    const user = req.user;
+    const saved = await save.findOne({ user: user._id, event: eventId });
+
+    if (saved) {
+        return res.status(200).json({ saved: true });
+    } else {
+        return res.status(200).json({ saved: false });
+    }
+}
 export{
-    createEvent,getEvent,likeevent,saveEvent,getSaveEvent,deleteEvent
+    createEvent,getEvent,likeevent,saveEvent,getSaveEvent,deleteEvent ,getLikedEvent,savedEvent
 }

@@ -35,7 +35,8 @@ async function registerUser(req, res) {
     }, process.env.JWT_SECRET, { expiresIn: '2d' });
       res.cookie("token", token,{
         httpOnly: true,
-        secure: process.env.NODE_ENVIRONMENT === 'production',
+     //secure: process.env.NODE_ENVIRONMENT === 'development',
+        secure:true,
         sameSite: 'None',
         maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
       })
@@ -85,7 +86,8 @@ async function loginUser(req, res) {
 
    res.cookie("token", token,{
         httpOnly: true,
-        secure: process.env.NODE_ENVIRONMENT === 'production',
+        //secure: process.env.NODE_ENVIRONMENT === 'development',
+        secure:true,
         sameSite: 'None',
         maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
       })
@@ -116,7 +118,16 @@ function logoutUser(req, res) {
 }
 async function updateUserProfile(req,res){
      const { id } = req.params;
+      const phoneRegex = /^(\+91)?[6-9]\d{9}$/;
+
   const { name, email, phone, address } = req.body;
+  if (!phoneRegex.test(phone)) {
+    return res.status(400).json({ message: "Invalid phone number format" });
+  }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ message: "Invalid email format" });
+  }
 
   try {
     const updatedUser = await EventOrganiser.findByIdAndUpdate(
@@ -168,7 +179,8 @@ async function registerOrganiser(req,res){
     },process.env.JWT_SECRET,{expiresIn: "2d"})
   res.cookie("token", token,{
         httpOnly: true,
-        secure: process.env.NODE_ENVIRONMENT === 'production',
+                //secure: process.env.NODE_ENVIRONMENT === 'development',
+        secure:true,
         sameSite: 'None',
         maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
       })
@@ -211,7 +223,8 @@ async function loginOrganiser(req,res){
     }, process.env.JWT_SECRET)
 res.cookie("token", token,{
         httpOnly: true,
-        secure: process.env.NODE_ENVIRONMENT === 'production',
+                //secure: process.env.NODE_ENVIRONMENT === 'development',
+        secure:true,
         sameSite: 'None',
         maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
       })
@@ -329,7 +342,9 @@ function authMe(req,res){
     const token = req.cookies?.token;
 
     if (!token) {
+      console.warn("No token found in cookies");
       return res.status(401).json({ authenticated: false });
+
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);

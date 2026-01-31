@@ -21,6 +21,5 @@ async function verifyEmail(req,res){
   } catch (err) {
     return res.redirect(`${process.env.CLIENT_URL}/verify-email?status=invalid`);
   }
-
 }
 export {verifyEmail};

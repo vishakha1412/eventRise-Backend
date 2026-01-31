@@ -1,5 +1,5 @@
 import express from "express";
-import { createEvent, getEvent,likeevent,saveEvent,deleteEvent } from "../controllers/event.controller.js";
+import { createEvent, getEvent,likeevent,saveEvent,deleteEvent,getSaveEvent,savedEvent,  getLikedEvent } from "../controllers/event.controller.js";
 import { authEventOrganiserMiddleware,authUserMiddleware } from "../middlewares/auth.middleware.js";
 import multer from "multer";
 const router=express.Router();
@@ -16,12 +16,14 @@ router.post('/',authEventOrganiserMiddleware,upload.single("file"),createEvent)/
 
 
 
-router.get('/',authUserMiddleware,getEvent)
-export default router;
-
-
-
+    router.get('/',authUserMiddleware,getEvent)
 router.post('/like',authUserMiddleware,
      likeevent
 )
 router.post('/save',authUserMiddleware,saveEvent)
+router.get('/saved',authUserMiddleware,
+   getSaveEvent
+)
+router.get('/saved/:eventId',authUserMiddleware,savedEvent)
+router.get('/getLike/:eventId',authUserMiddleware,getLikedEvent)
+export default router;
