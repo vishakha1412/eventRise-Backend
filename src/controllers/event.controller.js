@@ -133,6 +133,7 @@ async function saveEvent(req,res){
         event: eventId,
         isSave: true,
         
+        
     })
 
     await Event.findByIdAndUpdate(eventId, {

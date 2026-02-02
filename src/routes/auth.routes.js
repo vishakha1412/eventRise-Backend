@@ -10,8 +10,8 @@ router.get('/user/logout',  logoutUser)
 router.post("/user/request-password-reset", requestPasswordReset);
 router.post("/user/reset-password", resetPassword);
 
-router.get("/login/me",authMe);
-
+ 
+router.get('/login/me', authMe)
 
 
 router.post('/organiser/register', registerOrganiser)
