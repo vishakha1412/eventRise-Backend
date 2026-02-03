@@ -107,7 +107,12 @@ async function loginUser(req, res) {
 }
 function logoutUser(req, res) {
     try{
-    res.clearCookie("token");
+    res.clearCookie("token",{
+      httpOnly: true,
+  secure: true,
+  sameSite: "None",
+  path: "/"
+    });
     res.status(200).json({
         message: "User logged out successfully"
     });
@@ -331,7 +336,12 @@ async function resetPasswordOrganiser(req,res){
 
 }
 function logoutOrganiser(req,res){
-    res.clearCookie("token");
+    res.clearCookie("token",{
+      httpOnly: true,
+  secure: true,
+  sameSite: "None",
+  path: "/"
+    });
     res.status(200).json({
         messsage:"Organiser logged out succesfully"
     });
