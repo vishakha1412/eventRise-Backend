@@ -125,20 +125,14 @@ function logoutUser(req, res) {
     try{
     res.clearCookie("token",{
       httpOnly: true,
-<<<<<<< HEAD
+ 
       secure: true,
       sameSite: "None",
        path: "/"
 
     });
-      user.isLoggedIn=false;
+       user.isLoggedIn=false;
        user.save();
-=======
-  secure: true,
-  sameSite: "None",
-  path: "/"
-    });
->>>>>>> 52036fdb097874d313ea1c681816293cbf7104ef
     res.status(200).json({
         message: "User logged out successfully"
     });
@@ -408,7 +402,7 @@ function logoutOrganiser(req,res){
   path: "/"
     });
     res.status(200).json({
-        messsage:"Organiser logged out succesfully"
+        message:"Organiser logged out successfully"
     });
 }
 async function deleteOrganiser(req,res){
@@ -466,11 +460,8 @@ function authMe(req,res){
   }
 }
  
-<<<<<<< HEAD
+ 
 
 export {deleteOrganiser,deleteUser,resetPasswordOrganiser, requestPasswordOrganiserReset, registerUser, loginUser, logoutUser,loginOrganiser,logoutOrganiser,registerOrganiser,updateUserProfile,requestPasswordReset ,resetPassword,authMe};
  
-=======
-export {resetPasswordOrganiser, requestPasswordOrganiserReset, registerUser, loginUser, logoutUser,loginOrganiser,logoutOrganiser,registerOrganiser,updateUserProfile,requestPasswordReset ,resetPassword,authMe};
  
->>>>>>> 52036fdb097874d313ea1c681816293cbf7104ef
