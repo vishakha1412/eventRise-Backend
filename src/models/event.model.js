@@ -5,7 +5,7 @@ const eventSchema=new mongoose.Schema({
         type: String,
         required: true,
     },
-    image:[ {
+    images:[ {
         type: String,
         required: true,
     }],
@@ -17,6 +17,9 @@ const eventSchema=new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "EventOrganiser"
     },
+     eventOrganiserName:{
+          type:String,
+     },
     likeCount: {
         type: Number,
         default: 0

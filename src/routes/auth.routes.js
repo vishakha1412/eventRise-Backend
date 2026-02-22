@@ -1,5 +1,7 @@
 import express from 'express'
-import  {registerUser,loginUser, logoutUser,registerOrganiser,loginOrganiser,logoutOrganiser,updateUserProfile,requestPasswordReset,resetPassword, requestPasswordOrganiserReset, resetPasswordOrganiser, authMe,}  from '../controllers/auth.controller.js';
+import  {registerUser,loginUser, logoutUser,registerOrganiser,loginOrganiser,logoutOrganiser,updateUserProfile,requestPasswordReset,resetPassword, requestPasswordOrganiserReset, resetPasswordOrganiser, authMe, deleteUser, deleteOrganiser, }  from '../controllers/auth.controller.js';
+import { resendVerificationEmail, verifyEmail, verifyOrganiserEmail } from '../controllers/auth.email.controller.js';
+import verifyToken from '../middlewares/verifyToken.js';
 
  
 const router=express.Router();
@@ -9,16 +11,21 @@ router.post('/user/login', loginUser)
 router.get('/user/logout',  logoutUser)
 router.post("/user/request-password-reset", requestPasswordReset);
 router.post("/user/reset-password", resetPassword);
+router.delete('/user/delete/',verifyToken ,deleteUser)
 
  
 router.get('/login/me', authMe)
+router.get("/verify-email", verifyEmail);
 
-
+router.get("/organiser/verify-email",verifyOrganiserEmail)
 router.post('/organiser/register', registerOrganiser)
 router.post('/organiser/login', loginOrganiser)
 router.get('/organiser/logout', logoutOrganiser)
 router.put('/organiser/:id', updateUserProfile)
 router.post("/organiser/request-password-reset", requestPasswordOrganiserReset);
 router.post("/organiser/reset-password", resetPasswordOrganiser);
+router.delete("/organiser/delete", verifyToken, deleteOrganiser);
 
+
+router.post("/resend-verification",resendVerificationEmail);
 export default router;

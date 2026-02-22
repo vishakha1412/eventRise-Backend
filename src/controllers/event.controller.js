@@ -6,24 +6,28 @@ import save from "../models/save.model.js"
 import { v4 as uuid} from "uuid";
 
 async function createEvent(req,res){
-    
-    //console.log(req.body);
-   // console.log(req.file)
-    
+   
      
   try {
-    if (!req.file || !req.file.buffer) {
+    if (!req.files || !req.files.buffer === 0) {
       return res.status(400).json({ error: "File is missing or invalid" });
     }
 
-
- const fileUploadResult=await uploadFile(req.file.buffer,uuid())
  
+  const imageUrls = await Promise.all(
+      req.files.map(file => uploadFile(file.buffer, uuid()))
+    );
+    console.log(imageUrls);
+
+ console.log(imageUrls.map(r=>r.url));
  const event =await Event.create({
     name:req.body.name,
     description:req.body.description,
-    image:fileUploadResult.url,
-    eventOrganiser:req.eventOrganiser._id
+    //image:fileUploadResult.url,
+    images: imageUrls.map(r => r.url),
+   
+    eventOrganiser:req.eventOrganiser._id,
+    eventOrganiserName: req.eventOrganiser.businessName
  })
      res.status(201).json({
         message: "eventcreated successfully",

@@ -42,7 +42,12 @@ async function registerUser(req, res) {
       })
       console.log("Sending verification email to:", email);
      
-     await sendVerificationEmail({ email, token }).catch((err) => {
+     await sendVerificationEmail({ 
+      email,
+       token,
+       role:"user",
+
+      }).catch((err) => {
         console.log("Error sending email:", err);
     });
       res.status(201).json({ message: "User registered successfully" ,
@@ -60,7 +65,7 @@ async function loginUser(req, res) {
 
     const { email, password } = req.body;
   
-
+     
 
     const user = await userModel.findOne({
         email
@@ -71,6 +76,9 @@ async function loginUser(req, res) {
             message: "Invalid email or password"
         })
     }
+    if (!user.isVerified) return res.status(403).json({ error: "Please verify your email first" });
+
+
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
@@ -79,10 +87,17 @@ async function loginUser(req, res) {
             message: "Invalid email or password"
         })
     }
+   /* if(!user.isVerified){
+        return res.status(401).json({
+            message:"Email not verified. Please verify your email to login."
+        })
+    }*/
        const token = jwt.sign({
         id: user._id,role:user.role
     }, process.env.JWT_SECRET)
-
+   
+    user.isLoggedIn=true;
+    await user.save();
    res.cookie("token", token,{
         httpOnly: true,
         //secure: process.env.NODE_ENVIRONMENT === 'development',
@@ -95,6 +110,7 @@ async function loginUser(req, res) {
         console.log("Error sending email:", err);
     });
     res.status(200).json({
+        
         message: "User logged in successfully",
         role:user.role,
         token,
@@ -107,7 +123,15 @@ async function loginUser(req, res) {
 }
 function logoutUser(req, res) {
     try{
-    res.clearCookie("token");
+    res.clearCookie("token",{
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+       path: "/"
+
+    });
+      user.isLoggedIn=false;
+       user.save();
     res.status(200).json({
         message: "User logged out successfully"
     });
@@ -149,6 +173,38 @@ async function updateUserProfile(req,res){
   }
 
 }
+async function deleteUser(req,res){
+ try {
+    const userId = req.user.id; 
+
+    const deletedUser = await userModel.findByIdAndDelete(userId);
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+     res.clearCookie("token",{
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+       path: "/"
+
+    });
+
+    return res.status(200).json({
+      message: "User account deleted successfully",
+      user: {
+        _id: deletedUser._id,
+        email: deletedUser.email,
+        fullName: deletedUser.fullName,
+      },
+    });
+  } catch (error) {
+    console.error("Delete user error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+
+}
+ 
 async function registerOrganiser(req,res){
     const{name,businessName,phone,address,email,password}=req.body;
     
@@ -183,7 +239,9 @@ async function registerOrganiser(req,res){
         sameSite: 'None',
         maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
       })
-     await sendVerificationEmail({ email, token }).catch((err) => {
+     await sendVerificationEmail({ email, 
+      token,
+    role:"eventorganiser" ,}).catch((err) => {
         console.log("Error sending email:", err);
     });
     res.status(201).json({
@@ -211,12 +269,17 @@ async function loginOrganiser(req,res){
             message: "Invalid email or password"
         })
     }
+    if (!organiser.isVerified) return res.status(403).json({ error: "Please verify your email first" });
+
+
     const isPasswordValid = await bcrypt.compare(password, organiser.password);
     if (!isPasswordValid) {
         return res.status(400).json({
             message: "Invalid email or password"
         })
     }
+      organiser.isLoggedIn=true;
+    await organiser.save();
      const token = jwt.sign({
         id: organiser._id,role:organiser.role
     }, process.env.JWT_SECRET)
@@ -336,6 +399,38 @@ function logoutOrganiser(req,res){
         messsage:"Organiser logged out succesfully"
     });
 }
+async function deleteOrganiser(req,res){
+  try {
+    const organiserId = req.user.id; // comes from JWT middleware
+
+    const deletedOrganiser = await EventOrganiser.findByIdAndDelete(organiserId);
+    if (!deletedOrganiser) {
+      return res.status(404).json({ message: "Organiser not found" });
+    }
+
+     res.clearCookie("token",{
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+       path: "/"
+
+    });
+
+    return res.status(200).json({
+      message: "Organiser account deleted successfully",
+      organiser: {
+        _id: deletedOrganiser._id,
+        email: deletedOrganiser.email,
+       
+      },
+    });
+  } catch (error) {
+    console.error("Delete organiser error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
+
 function authMe(req,res){
   try {
     const token = req.cookies?.token;
@@ -359,5 +454,6 @@ function authMe(req,res){
   }
 }
  
-export {resetPasswordOrganiser, requestPasswordOrganiserReset, registerUser, loginUser, logoutUser,loginOrganiser,logoutOrganiser,registerOrganiser,updateUserProfile,requestPasswordReset ,resetPassword,authMe};
+
+export {deleteOrganiser,deleteUser,resetPasswordOrganiser, requestPasswordOrganiserReset, registerUser, loginUser, logoutUser,loginOrganiser,logoutOrganiser,registerOrganiser,updateUserProfile,requestPasswordReset ,resetPassword,authMe};
  

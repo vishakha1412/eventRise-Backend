@@ -40,7 +40,12 @@ const userSchema = new mongoose.Schema({
     },
     otpExpiry:{
         type:Date,
-    }
+    },
+    lastVerificationEmailSent: {
+  type: Date,
+  default: null,
+},
+
     
 },
     {

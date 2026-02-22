@@ -42,7 +42,19 @@ email: {
     },
     otpExpiry:{
         type:Date,
-    }
+    },
+     isVerified:{
+        type:Boolean,
+        default:false
+    },
+    isLoggedIn:{
+        type:Boolean,
+        default:false
+    },
+    lastVerificationEmailSent: {
+  type: Date,
+  default: null,
+},
     
 
 

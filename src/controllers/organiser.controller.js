@@ -3,6 +3,7 @@ import Event from "../models/event.model.js";
 
 async function getOrganiserById(req,res){
     const OrganiserId=req.params.id;
+    console.log(OrganiserId);
     const eventOrganiser=await EventOrganiser.findById(OrganiserId)
 
     const eventByOrganiser =await Event.find({

@@ -5,6 +5,7 @@ import authroutes from './routes/auth.routes.js'
 import eventroutes from'./routes/event.routes.js'
 import organiserroutes from './routes/eventOrganiser.js'
 import feedbackroutes from './routes/Feedback.routes.js'
+import userroutes from './routes/user.routes.js'
  
 // comments are for understanding what the use of code of line  
  
@@ -13,8 +14,8 @@ import feedbackroutes from './routes/Feedback.routes.js'
 const app=express();
 app.use(cors( // to prevent cors error 
     {
-        //origin:"https://eventrise-six.vercel.app",
         origin:"https://eventrise-six.vercel.app",
+        //origin:"http://localhost:5173",
         credentials:true,
     }
 ));
@@ -30,6 +31,7 @@ app.get('/',(req,res)=>{
 app.use('/api/auth',authroutes);
 app.use('/api/event',eventroutes)
 app.use('/api/organiser',organiserroutes)
+app.use('/api/user',userroutes)
 app.use('/api/feedback', feedbackroutes); // Dynamic import for Feedback routes
 
 
