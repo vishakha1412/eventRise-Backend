@@ -4,6 +4,7 @@ import { sendVerificationEmail } from "../services/email.service.js";
 import { sendOtpMail } from "../services/sendotpmail.js";
 
 import bcrypt from "bcryptjs";
+
 import jwt from "jsonwebtoken";
 
  
